@@ -1,14 +1,23 @@
-import express from 'express'
-import bodyParser from 'body-parser'
+import express from 'express';
+import mongoose from 'mongoose';
+import morgan from 'morgan';
+import singinRrouter from './src/routes/signin';
+const app = express();
 
-const app = express()
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use('/register', singinRrouter);
 
-app.use(bodyParser.json())
+// const db = 'mongodb+srv://Heace:heace@cluster0.p0yf3.mongodb.net/test';
+const db = require('./src/config/keys').mongoURI;
+mongoose
+  .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected...'))
+  .catch((err) => console.log(err));
 
-app.get('/',(req,res) => {
-  res.send("Hello Babel")
-})
+const port = process.env.PORT || 5000;
 
-app.listen(4000,() => {
-  console.log(`app is listening to port 4000`)
-})
+app.listen(port, () => {
+  console.log(`app is listening to port ${port}`);
+});
