@@ -1,19 +1,14 @@
 import { Router } from 'express';
-import { Clan } from './model';
+import { clanControllers } from './clan.controllers';
 
-export const router = Router();
+const router = Router();
 
-function createOne{
-    async (req, res) => {
-        console.log(req.body);
-        try {
-          const clan = await Clan.create(req.body);
-          res.status(200).json(clan);
-        } catch (e) {
-          console.error(e);
-          res.status(400).end();
-        }
-      }
-}
+router.route('/').get(clanControllers.getMany).post(clanControllers.createOne);
 
-router.post('/', createOne);
+router
+  .route('/:id')
+  .get(clanControllers.getOne)
+  .put(clanControllers.updateOne)
+  .delete(clanControllers.removeOne);
+
+export default router;

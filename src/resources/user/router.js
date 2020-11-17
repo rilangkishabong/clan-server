@@ -1,19 +1,14 @@
 import { Router } from 'express';
-import { User } from './model';
+import { userControllers } from './user.controllers';
+
 const router = Router();
 
-const createOne = async (req, res) => {
-  console.log(req.body);
+router.route('/').get(userControllers.getMany).post(userControllers.createOne);
 
-  try {
-    const user = await User.create(req.body);
-    res.status(200).json(user);
-  } catch (e) {
-    console.error(e);
-    res.status(400).end();
-  }
-};
-
-router.post('/', createOne);
+router
+  .route('/:id')
+  .get(userControllers.getOne)
+  .put(userControllers.updateOne)
+  .delete(userControllers.removeOne);
 
 export default router;
